@@ -28,10 +28,11 @@ class PNAugment(nn.Module):
 def fake_trans(inputs):
     #2D image patchify and merge
     inputs = inputs.cpu().numpy()
+    neg_inputs = []
     for i in range(len(inputs)):
         patches = patchify(inputs[i], (3,16,16), step=1)
         print(patches.shape)
-        neg_inputs = unpatchify(patches, inputs[i].shape)
-        print(neg_inputs.shape)
-    
+        neg_inputs.append(unpatchify(patches, inputs[i].shape))
+    neg_inputs = torch.stack(neg_inputs, dim=0)
+    print(neg_inputs.shape)
     return neg_inputs
